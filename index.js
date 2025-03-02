@@ -1,3 +1,5 @@
+const express = require("express");
+const path = require("path");
 const { faker } = require("@faker-js/faker");
 const mysql = require("mysql2");
 
@@ -6,6 +8,45 @@ const connection = mysql.createConnection({
   user: "root",
   database: "nodeSQL",
   password: "Dibyajyotipramanick",
+});
+
+const app = express();
+const port = 8080;
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/", (req, res) => {
+  connection.query(`SELECT * FROM users`, (err, usersResult) => {
+    if (err) {
+      console.log(err);
+      return res.send("Some error in DB");
+    }
+
+    connection.query(
+      `SELECT COUNT(id) AS COUNT FROM users`,
+      (err, countResult) => {
+        if (err) {
+          console.log(err);
+          return res.send("Some error in DB");
+        }
+
+        let users = usersResult;
+        let count = countResult[0].COUNT;
+
+        res.render("home", { users, count });
+      }
+    );
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
 
 // let createRandomUser = () => {
