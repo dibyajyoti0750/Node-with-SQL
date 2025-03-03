@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <style>
+      /* Geist Dark Theme */
+      :root {
+        --background: #000;
+        --foreground: #fff;
+        --input-bg: #111;
+        --input-border: #333;
+        --input-text: #fff;
+        --button-bg: #0070f3;
+        --button-text: #fff;
+        --button-hover-bg: #0056b3;
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--foreground);
+        font-family: "Inter", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        margin-top: 5rem;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 320px;
+        background: #111;
+        padding: 20px;
+        border-radius: 8px;
+      }
+
+      input {
+        background: var(--input-bg);
+        border: 1px solid var(--input-border);
+        color: var(--input-text);
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        outline: none;
+      }
+
+      input:focus {
+        border-color: #0070f3;
+      }
+
+      button {
+        background: var(--button-bg);
+        color: var(--button-text);
+        border: none;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.2s ease-in-out;
+      }
+
+      button:hover {
+        background: var(--button-hover-bg);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Sign Up</h1>
+    <form action="/users" method="POST">
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="url" name="avatar" placeholder="Avatar URL" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <button type="submit">Sign Up</button>
+    </form>
+  </body>
+</html>

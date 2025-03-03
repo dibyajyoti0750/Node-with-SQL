@@ -3,6 +3,7 @@ const path = require("path");
 const { faker } = require("@faker-js/faker");
 const mysql = require("mysql2");
 const methodOverride = require("method-override");
+const { v4: uuidv4 } = require("uuid");
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -87,6 +88,26 @@ app.patch("/users/:id", (req, res) => {
       res.redirect("/users");
     });
   });
+});
+
+app.get("/users/new", (req, res) => {
+  res.render("new");
+});
+
+app.post("/users", (req, res) => {
+  let id = uuidv4();
+  let { username, email, avatar, password } = req.body;
+  connection.query(
+    "INSERT INTO users VALUES (?, ?, ?, ?, ?)",
+    [id, username, email, avatar, password],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.send("Some error in DB");
+      }
+      res.redirect("/users");
+    }
+  );
 });
 
 app.listen(port, () => {

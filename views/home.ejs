@@ -140,7 +140,11 @@
   <body>
     <div class="container d-grid gap-2">
       <h1><%= count %> Members and Counting...</h1>
-      <a href="#" class="btn btn-primary btn-lg fw-semibold">Join Us Today</a>
+      <form action="/users/new" method="get">
+        <button class="btn btn-primary btn-lg fw-semibold w-100">
+          Join Us Today
+        </button>
+      </form>
 
       <table>
         <tr>
@@ -162,7 +166,6 @@
         <% } %>
       </table>
     </div>
-
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
