@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const { faker } = require("@faker-js/faker");
 const mysql = require("mysql2");
+const methodOverride = require("method-override");
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -15,6 +16,7 @@ const port = 8080;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(methodOverride("_method"));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -22,6 +24,10 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
+  res.redirect("/users");
+});
+
+app.get("/users", (req, res) => {
   connection.query(`SELECT * FROM users`, (err, usersResult) => {
     if (err) {
       console.log(err);
@@ -42,6 +48,44 @@ app.get("/", (req, res) => {
         res.render("home", { users, count });
       }
     );
+  });
+});
+
+app.get("/users/:id/edit", (req, res) => {
+  let { id } = req.params;
+  connection.query(`SELECT * FROM users WHERE id = "${id}"`, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.send("Some error in DB");
+    }
+    let user = result[0];
+    console.log(user);
+    res.render("edit", { user });
+  });
+});
+
+app.patch("/users/:id", (req, res) => {
+  let { id } = req.params;
+  let { password: formPass, newUsername } = req.body;
+  connection.query(`SELECT * FROM users WHERE id = "${id}"`, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.send("Some error in DB");
+    }
+
+    let user = result[0];
+    if (formPass !== user.password) {
+      return res.send("Wrong Password!");
+    }
+
+    let q = `UPDATE users SET username = "${newUsername}" WHERE id = "${id}"`;
+    connection.query(q, (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.send("Some error in DB");
+      }
+      res.redirect("/users");
+    });
   });
 });
 
