@@ -110,6 +110,45 @@ app.post("/users", (req, res) => {
   );
 });
 
+app.get("/users/:id/delete", (req, res) => {
+  let { id } = req.params;
+  connection.query(`SELECT * FROM users WHERE id = "${id}"`, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.send("Some error in DB");
+    }
+    let user = result[0];
+    console.log(user);
+    res.render("delete", { user });
+  });
+});
+
+app.delete("/users/:id", (req, res) => {
+  let { id } = req.params;
+  let { email: formEmail, password: formPass } = req.body;
+
+  connection.query(`SELECT * FROM users WHERE id = "${id}"`, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.send("Some error in DB");
+    }
+
+    let user = result[0];
+    if (user.email !== formEmail || user.password !== formPass) {
+      return res.send("Incorrect Email or Password");
+    }
+
+    connection.query(`DELETE FROM users WHERE id = "${id}"`, (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.send("Some error in DB");
+      }
+
+      res.redirect("/users");
+    });
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
